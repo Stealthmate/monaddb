@@ -15,5 +15,4 @@ import           Database.HDBC.Schema.PostgreSQL (driverPostgreSQL)
 import           Language.Haskell.TH
 
 main :: IO ()
-main = flip runReaderT Nothing . runMyMonad $ do
-  insertM insertAcc $ Acc { tid = "0", accname = "asd" }
+main = pure ()
