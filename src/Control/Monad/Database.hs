@@ -22,14 +22,25 @@ import           Database.Relational
 
 withConnection' :: (MonadDatabase m) => (ConnWrapper -> IO b) -> m b
 withConnection' op = do
-  c <- getConnection >>= maybe newConnection pure
-  liftIO $ op c
+  c <- getConnection
+  case c of
+    Nothing -> do
+      c' <- newConnection
+      r <- liftIO $ op c'
+      destroyConnection c'
+      pure r
+    Just c' -> liftIO $ op c'
 
 runTransaction :: (MonadDatabase m) => m r -> m r
 runTransaction op = do
   c <- getConnection
-  conn <- maybe newConnection pure c
-  withConnection (Just conn) op
+  case c of
+    Nothing -> do
+      c' <- newConnection
+      r <- withConnection (Just c') op
+      destroyConnection c'
+      pure r
+    Just c' -> withConnection (Just c') op
 
 insertM ::(MonadDatabase m, ToSql SqlValue p) => Insert p -> p -> m Integer
 insertM s p = withConnection' $ \c -> runInsert c s p
