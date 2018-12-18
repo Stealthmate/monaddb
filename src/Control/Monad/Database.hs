@@ -2,6 +2,7 @@
 module Control.Monad.Database
   ( runTransaction
   , insertM
+  , bulkInsertM
   , queryM
   , queryMaybeM
   , queryJustM
@@ -13,6 +14,7 @@ module Control.Monad.Database
   ) where
 
 import           Control.Monad.Database.Type
+import Control.Monad.Catch
 import           Control.Monad.IO.Class      (liftIO)
 import           Data.Maybe                  (listToMaybe)
 import           Database.HDBC
@@ -38,11 +40,15 @@ runTransaction op = do
   case c of
     Nothing -> do
       c' <- newConnection
-      r <- withConnection (Just c') op
-      liftIO $ commit c'
+      r <- doTransaction op c'
       destroyConnection c'
       pure r
-    Just c' -> withConnection (Just c') op
+    Just c' -> doTransaction op c'
+  where
+    doTransaction op' conn = do
+      r <- onException (withConnection (Just conn) op') (liftIO $ rollback conn)
+      liftIO $ commit conn
+      pure r
 
 insertM ::(MonadDatabase m, ToSql SqlValue p) => Insert p -> p -> m Integer
 insertM s p = withConnection' $ \c -> do

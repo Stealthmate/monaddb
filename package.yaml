@@ -32,6 +32,7 @@ dependencies:
 - relational-record
 - relational-query
 - relational-query-HDBC
+- hspec
 
 library:
   source-dirs: src
