@@ -26,6 +26,7 @@ dependencies:
 - transformers >= 0.5
 - mtl
 - exceptions
+- template-haskell
 - product-isomorphic
 - persistable-record
 - relational-record

@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TemplateHaskell            #-}
 module Main where
 
 
@@ -8,21 +9,11 @@ import           Control.Monad.Reader
 import           Data.Maybe
 import           Database.HDBC
 import           Database.HDBC.PostgreSQL
-
-type Context = Maybe ConnWrapper
-
-newtype MyMonad a = MyMonad { runMyMonad :: ReaderT Context IO a }
-  deriving ( Functor
-           , Applicative
-           , Monad
-           , MonadIO
-           , MonadReader Context )
-
-instance MonadDatabase MyMonad where
-  getConnection = fmap ConnWrapper <$> ask
-  newConnection = ConnWrapper . fromJust <$> ask
-  withConnection mc = local (const mc)
+import           Database.HDBC.Query.TH          (defineTableFromDB)
+import           Database.HDBC.Schema.Driver     (typeMap)
+import           Database.HDBC.Schema.PostgreSQL (driverPostgreSQL)
+import           Language.Haskell.TH
 
 main :: IO ()
 main = flip runReaderT Nothing . runMyMonad $ do
-  pure ()
+  insertM insertAcc $ Acc { tid = "0", accname = "asd" }

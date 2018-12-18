@@ -27,6 +27,7 @@ withConnection' op = do
     Nothing -> do
       c' <- newConnection
       r <- liftIO $ op c'
+      liftIO $ commit c'
       destroyConnection c'
       pure r
     Just c' -> liftIO $ op c'
@@ -38,12 +39,14 @@ runTransaction op = do
     Nothing -> do
       c' <- newConnection
       r <- withConnection (Just c') op
+      liftIO $ commit c'
       destroyConnection c'
       pure r
     Just c' -> withConnection (Just c') op
 
 insertM ::(MonadDatabase m, ToSql SqlValue p) => Insert p -> p -> m Integer
-insertM s p = withConnection' $ \c -> runInsert c s p
+insertM s p = withConnection' $ \c -> do
+  runInsert c s p
 
 bulkInsertM :: (MonadDatabase m, ToSql SqlValue p) => Insert p -> [p] -> m ()
 bulkInsertM s p = withConnection' $ \c -> bulkInsert c s p

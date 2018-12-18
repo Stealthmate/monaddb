@@ -1,13 +1,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes            #-}
-module Control.Monad.Database.Type
-  ( MonadDatabase
-  , getConnection
-  , newConnection
-  , withConnection
-  , destroyConnection
-  ) where
+module Control.Monad.Database.Type where
 
 import           Control.Monad.IO.Class (MonadIO)
 import           Database.HDBC
