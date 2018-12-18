@@ -45,6 +45,9 @@ runTransaction op = do
 insertM ::(MonadDatabase m, ToSql SqlValue p) => Insert p -> p -> m Integer
 insertM s p = withConnection' $ \c -> runInsert c s p
 
+bulkInsertM :: (MonadDatabase m, ToSql SqlValue p) => Insert p -> [p] -> m ()
+bulkInsertM s p = withConnection' $ \c -> bulkInsert c s p
+
 queryM :: (MonadDatabase m, ToSql SqlValue p, FromSql SqlValue r) => Query p r -> p -> m [r]
 queryM q p = withConnection' $ \c -> runQuery c q p
 
