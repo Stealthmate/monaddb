@@ -3,6 +3,7 @@ module Control.Monad.Database
   ( runTransaction
   , insertM
   , bulkInsertM
+  , insertQueryM
   , queryM
   , queryMaybeM
   , queryJustM
