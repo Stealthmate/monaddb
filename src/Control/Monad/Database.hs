@@ -57,6 +57,9 @@ insertM s p = withConnection' $ \c -> do
 bulkInsertM :: (MonadDatabase m, ToSql SqlValue p) => Insert p -> [p] -> m ()
 bulkInsertM s p = withConnection' $ \c -> bulkInsert c s p
 
+insertQueryM :: (MonadDatabase m, ToSql SqlValue p) => InsertQuery p -> p -> m Integer
+insertQueryM s p = withConnection' $ \c -> runInsertQuery c s p
+
 queryM :: (MonadDatabase m, ToSql SqlValue p, FromSql SqlValue r) => Query p r -> p -> m [r]
 queryM q p = withConnection' $ \c -> runQuery c q p
 
