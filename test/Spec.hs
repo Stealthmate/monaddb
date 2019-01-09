@@ -45,3 +45,5 @@ main = hspec $ do
             insertM insertAcc $ Acc { accname = "no", currency = "asd" }
             pure ()
       r `shouldThrow` (\(SomeException e) -> trace (show e) True)
+      rs <- runMyMonad' $ queryM selectAcc ("no", "asd")
+      rs `shouldBe` []

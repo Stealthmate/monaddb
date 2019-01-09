@@ -8,4 +8,4 @@ module Table where
 import           GHC.Generics
 import           TH
 
-$(defineTable "acc" [''Generic])
+$(defineTable "acc" [''Generic, ''Show, ''Eq])
