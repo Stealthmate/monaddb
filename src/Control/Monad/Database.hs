@@ -44,7 +44,7 @@ runTransaction op = do
       r <- doTransaction op c'
       destroyConnection c'
       pure r
-    Just c' -> doTransaction op c'
+    Just _ -> op
   where
     doTransaction op' conn = do
       flip onException (liftIO $ rollback conn) $ do
