@@ -1,0 +1,12 @@
+version: '3'
+services:
+  postgres:
+    container_name: monaddb-test
+    image: postgres:11.0
+    environment:
+      POSTGRES_USER: monaddb
+      POSTGRES_PASSWORD: monaddb
+    volumes:
+      - ./dev-data/postgres:/var/lib/postgresql/data:z
+    ports:
+      - 5432:5432
