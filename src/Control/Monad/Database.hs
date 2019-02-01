@@ -63,7 +63,7 @@ insertQueryM :: (MonadDatabase m, ToSql SqlValue p) => InsertQuery p -> p -> m I
 insertQueryM s p = withConnection' $ \c -> runInsertQuery c s p
 
 queryM :: (MonadDatabase m, ToSql SqlValue p, FromSql SqlValue r) => Query p r -> p -> m [r]
-queryM q p = withConnection' $ \c -> runQuery c q p
+queryM q p = withConnection' $ \c -> runQuery' c q p
 
 queryMaybeM :: (MonadDatabase m, ToSql SqlValue p, FromSql SqlValue r) => Query p r -> p -> m (Maybe r)
 queryMaybeM q p = listToMaybe <$> queryM q p
