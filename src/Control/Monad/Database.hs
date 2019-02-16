@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Control.Monad.Database
   ( runTransaction
+  , withConnection'
   , insertM
   , bulkInsertM
   , insertQueryM
